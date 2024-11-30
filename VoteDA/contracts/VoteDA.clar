@@ -26,6 +26,11 @@
     }
 )    
 
+;; Track individual voter participation
+(define-map voter-status 
+    { proposal-id: uint, voter: principal }
+    { has-voted: bool }
+)
 ;; private functions
 ;;
 
