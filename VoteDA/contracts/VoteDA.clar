@@ -39,4 +39,7 @@
 ;;
 
 ;; public functions
-;;
+;; Internal utility for proposal validation
+(define-private (is-valid-proposal (proposal-id uint))
+    (is-some (map-get? proposals { proposal-id: proposal-id }))
+)
