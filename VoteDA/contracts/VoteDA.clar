@@ -161,3 +161,21 @@
         (ok true)
     )
 )
+
+;; Calculate proposal results
+(define-read-only (get-proposal-results (proposal-id uint))
+    (let 
+        (
+            (proposal (unwrap! 
+                (map-get? proposals { proposal-id: proposal-id }) 
+                ERR-PROPOSAL-NOT-FOUND
+            ))
+        )
+        (ok {
+            total-votes: (+ (get votes-for proposal) (get votes-against proposal)),
+            votes-for: (get votes-for proposal),
+            votes-against: (get votes-against proposal),
+            passed: (> (get votes-for proposal) (get votes-against proposal))
+        })
+    )
+)
