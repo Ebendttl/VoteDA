@@ -12,7 +12,19 @@
 (define-constant ERR-UNAUTHORIZED-CLOSURE (err u6))
 
 ;; data maps and vars
-;;
+;; Store proposal details with comprehensive tracking
+(define-map proposals 
+    { proposal-id: uint }
+    {
+        title: (string-utf8 100),        ;; Proposal title
+        description: (string-utf8 500),  ;; Detailed description
+        proposed-by: principal,          ;; Original proposer
+        votes-for: uint,                 ;; Positive votes
+        votes-against: uint,             ;; Negative votes
+        is-active: bool,                 ;; Current proposal status
+        created-at: uint                 ;; Timestamp of proposal 
+    }
+)    
 
 ;; private functions
 ;;
