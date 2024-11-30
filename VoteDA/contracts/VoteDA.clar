@@ -78,3 +78,58 @@
         (ok proposal-id)
     )
 )
+
+;; Cast a vote on an existing proposal
+(define-public (vote 
+    (proposal-id uint) 
+    (vote-direction bool)
+)
+    (let 
+        (
+            ;; Retrieve proposal details safely
+            (proposal (unwrap! 
+                (map-get? proposals { proposal-id: proposal-id }) 
+                ERR-PROPOSAL-NOT-FOUND
+            ))
+            
+            ;; Check proposal active status
+            (is-active (get is-active proposal))
+        )
+        ;; Validate proposal is still active
+        (asserts! is-active ERR-PROPOSAL-INACTIVE)
+        
+        ;; Prevent duplicate voting
+        (asserts! 
+            (is-none (map-get? voter-status 
+                { proposal-id: proposal-id, voter: tx-sender }
+            )) 
+            ERR-ALREADY-VOTED
+        )
+        
+        ;; Record voter participation
+        (map-set voter-status 
+            { proposal-id: proposal-id, voter: tx-sender }
+            { has-voted: true }
+        )
+        
+        ;; Update vote counts based on voter's choice
+        (if vote-direction
+            ;; Increment 'votes-for'
+            (map-set proposals 
+                { proposal-id: proposal-id }
+                (merge proposal { 
+                    votes-for: (+ (get votes-for proposal) u1) 
+                })
+            )
+            ;; Increment 'votes-against'
+            (map-set proposals 
+                { proposal-id: proposal-id }
+                (merge proposal { 
+                    votes-against: (+ (get votes-against proposal) u1) 
+                })
+            )
+        )
+        
+        (ok true)
+    )
+)
