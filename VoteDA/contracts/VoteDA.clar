@@ -133,3 +133,9 @@
         (ok true)
     )
 )
+
+;; Retrieve proposal details
+(define-read-only (get-proposal (proposal-id uint))
+    (map-get? proposals { proposal-id: proposal-id })
+)
+
