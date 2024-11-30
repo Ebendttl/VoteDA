@@ -139,3 +139,25 @@
     (map-get? proposals { proposal-id: proposal-id })
 )
 
+;; Close an existing proposal
+(define-public (close-proposal (proposal-id uint))
+    (let 
+        (
+            ;; Safely retrieve proposal details
+            (proposal (unwrap! 
+                (map-get? proposals { proposal-id: proposal-id }) 
+                ERR-PROPOSAL-RETRIEVAL-FAILED
+            ))
+        )
+        ;; Restrict closure to original proposer
+        (asserts! (is-eq tx-sender (get proposed-by proposal)) ERR-UNAUTHORIZED-CLOSURE)
+        
+        ;; Mark proposal as inactive
+        (map-set proposals 
+            { proposal-id: proposal-id }
+            (merge proposal { is-active: false })
+        )
+        
+        (ok true)
+    )
+)
