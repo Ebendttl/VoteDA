@@ -1,6 +1,6 @@
 
-;; VoteDA
-;; <add a description here>
+;; Decentralized Governance Voting Contract (VoteDA)
+;; Designed for transparent and immutable proposal management, the contract enables communities to create, vote on, and manage proposals with comprehensive safeguard
 
 ;; constants
 ;;
