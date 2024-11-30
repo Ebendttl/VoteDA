@@ -43,3 +43,38 @@
 (define-private (is-valid-proposal (proposal-id uint))
     (is-some (map-get? proposals { proposal-id: proposal-id }))
 )
+
+;; public functions
+;; Create a new governance proposal
+(define-public (create-proposal 
+    (title (string-utf8 100)) 
+    (description (string-utf8 500))
+)
+    (let 
+        (
+            ;; Generate unique proposal ID
+            (proposal-id (var-get next-proposal-id))
+        )
+        ;; Validate proposal title is not empty
+        (asserts! (> (len title) u0) ERR-EMPTY-PROPOSAL)
+        
+        ;; Store proposal with comprehensive details
+        (map-set proposals 
+            { proposal-id: proposal-id }
+            {
+                title: title,
+                description: description,
+                proposed-by: tx-sender,
+                votes-for: u0,
+                votes-against: u0,
+                is-active: true,
+                created-at: block-height
+            }
+        )
+        
+        ;; Increment proposal ID for next proposal
+        (var-set next-proposal-id (+ proposal-id u1))
+        
+        (ok proposal-id)
+    )
+)
