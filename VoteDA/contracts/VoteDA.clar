@@ -31,6 +31,10 @@
     { proposal-id: uint, voter: principal }
     { has-voted: bool }
 )
+
+;; Manage proposal ID generation
+(define-data-var next-proposal-id uint u0)
+
 ;; private functions
 ;;
 
